@@ -2,7 +2,7 @@ from bot import aria2, download_dict_lock, download_dict, STOP_DUPLICATE, TORREN
 from bot.helper.mirror_utils.upload_utils.gdriveTools import GoogleDriveHelper
 from bot.helper.ext_utils.bot_utils import is_magnet, getDownloadByGid, new_thread, get_readable_file_size
 from bot.helper.mirror_utils.status_utils.aria_download_status import AriaDownloadStatus
-from bot.helper.telegram_helper.message_utils import sendMarkup
+from bot.helper.telegram_helper.message_utils import sendMarkup, sendStatusMessage
 from time import sleep
 import threading
 
@@ -101,3 +101,4 @@ class AriaDownloadHelper:
         with download_dict_lock:
             download_dict[listener.uid] = AriaDownloadStatus(download.gid, listener)
             LOGGER.info(f"Started: {download.gid} DIR:{download.dir} ")
+        sendStatusMessage(listener.update, listener.bot)

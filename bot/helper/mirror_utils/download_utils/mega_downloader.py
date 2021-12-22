@@ -132,20 +132,15 @@ class AsyncExecutor:
         function(*args)
         self.continue_event.wait()
 
-listeners = []
 
 class MegaDownloadHelper:
-    def __init__(self):
-        pass
 
     @staticmethod
     @new_thread
     def add_download(mega_link: str, path: str, listener):
         executor = AsyncExecutor()
         api = MegaApi(MEGA_API_KEY, None, None, 'telegram-mirror-bot')
-        global listeners
         mega_listener = MegaAppListener(executor.continue_event, listener)
-        listeners.append(mega_listener)
         api.addListener(mega_listener)
         if MEGA_EMAIL_ID is not None and MEGA_PASSWORD is not None:
             executor.do(api.login, (MEGA_EMAIL_ID, MEGA_PASSWORD))
@@ -180,7 +175,7 @@ class MegaDownloadHelper:
             msg3 = f'Failed, Zip/Unzip limit is {ZIP_UNZIP_LIMIT}GB.\nYour File/Folder size is {get_readable_file_size(api.getSize(node))}.'
             limit = ZIP_UNZIP_LIMIT
         elif MEGA_LIMIT is not None:
-            msg3 = f'Failed, Mega limit is {MEGA_LIMIT}GB.\nYour File/Folder size is {get_readable_file_size(api.getSize(node))}.' 
+            msg3 = f'Failed, Mega limit is {MEGA_LIMIT}GB.\nYour File/Folder size is {get_readable_file_size(api.getSize(node))}.'
             limit = MEGA_LIMIT
         if limit is not None:
             LOGGER.info('Checking File/Folder Size...')
